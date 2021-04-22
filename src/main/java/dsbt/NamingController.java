@@ -43,7 +43,7 @@ public class NamingController {
 				return ("The variable is not goed");
 		}
 		else
-			return ("The variable is not goed");
+			return ("The variable is not goed" );
 	}
 
 	@GetMapping("/getFile")

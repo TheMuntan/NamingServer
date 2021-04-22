@@ -13,25 +13,37 @@ public class NamingController {
 	private MapDatabase map = MapDatabase.getInstanceMap();
 
 
+
 	@PutMapping("/addNode")
-	public String addNode(@ModelAttribute("integer") int iD, @RequestParam(value = "ipAdress", defaultValue = "null") String ipAdress ){
-		if(!(iD <= 0) && (!ipAdress.equals("null")) && !(iD>327680)) {
-			map.addNode(iD,ipAdress);
-			return ("Node has been added!");
+	//public String addNode(@ModelAttribute("integer") int iD, @RequestParam(value = "ipAdress", defaultValue = "null") String ipAdress ){
+	public String addNode(@RequestParam(value = "nameNode",defaultValue = "null") String nameNode, @RequestParam(value = "ipAdress", defaultValue = "null") String ipAdress ) {
+
+		if (!nameNode.equals("null") && !ipAdress.equals("null")) {
+			int iD = HashFunction.getHash(nameNode);
+
+			if (!(iD <= 0) && !(iD > 327680)) { // deze if moet nog aangepast worden!
+				map.addNode(iD, ipAdress);
+				return ("Node has been added!");
+			} else
+				return ("The variables are not good! ");
 		}
 		else
 			return ("The variables are not good! ");
 	}
 
 	@PutMapping("/removeNode")
-	public String removeNode(@ModelAttribute("integer") int iD){
-		if (!(iD <= 0)){
-			map.removeNode(iD);
-			return ("Node had been removed");
+	public String removeNode(@RequestParam(value = "nameNode",defaultValue = "null") String nameNode){
+		if (!nameNode.equals("null")) {
+			int iD = HashFunction.getHash(nameNode);
+
+			if (!(iD <= 0) && !(iD > 327680)) { // deze if moet nog aangepast worden!
+				map.removeNode(iD);
+				return ("Node had been removed");
+			} else
+				return ("The variable is not goed");
 		}
 		else
 			return ("The variable is not goed");
-
 	}
 
 	@GetMapping("/getFile")

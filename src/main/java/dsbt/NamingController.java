@@ -4,10 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class NamingController {
@@ -17,8 +14,8 @@ public class NamingController {
 
 
 	@PutMapping("/addNode")
-	public String addNode(@RequestParam (value = "integer",defaultValue = "-1") int iD, @RequestParam(value = "ip", defaultValue = "null") String ipAdress ){
-		if(!(iD ==-1) && (!ipAdress.equals("null"))) {
+	public String addNode(@ModelAttribute("integer") int iD, @RequestParam(value = "ipAdress", defaultValue = "null") String ipAdress ){
+		if(!(iD <= 0) && (!ipAdress.equals("null")) && !(iD>327680)) {
 			map.addNode(iD,ipAdress);
 			return ("Node has been added!");
 		}
@@ -27,8 +24,8 @@ public class NamingController {
 	}
 
 	@PutMapping("/removeNode")
-	public String removeNode(@RequestParam (value = "integer",defaultValue = "-1") int iD){
-		if (!(iD ==-1)){
+	public String removeNode(@ModelAttribute("integer") int iD){
+		if (!(iD <= 0)){
 			map.removeNode(iD);
 			return ("Node had been removed");
 		}
@@ -41,6 +38,8 @@ public class NamingController {
 	public File getFile(@RequestParam(value = "filename", defaultValue = "null") String fileName){
 		if (!fileName.equals("null")){
 			// file -> hashfunctie, de hashfunctie vergelijken met de ID's , file eruithalen en terug geven
+
+
 			return null;
 		}
 		else

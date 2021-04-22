@@ -17,4 +17,14 @@ public class MapDatabase {
             singleToneMap = new MapDatabase();
         return singleToneMap;
     }
+
+    public void addNode(int iD, String ipAdress){
+        map.put(iD,ipAdress);
+    }
+
+    public void removeNode(int iD){
+        map.remove(iD);
+    }
+
+
 }

@@ -33,7 +33,7 @@ public class NamingController {
 			return ("Node had been removed");
 		}
 		else
-			return ("The variable is not goed");
+			return ("The variable is not good");
 
 	}
 

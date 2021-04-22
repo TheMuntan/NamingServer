@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class MapDatabase {
 
-    private static MapDatabase singleToneMap = null;
+    private static MapDatabase singleTonMap = null;
     private HashMap<Integer,String> map;
 
 
@@ -13,9 +13,9 @@ public class MapDatabase {
     }
 
     public static  MapDatabase getInstanceMap(){
-        if (singleToneMap == null)
-            singleToneMap = new MapDatabase();
-        return singleToneMap;
+        if (singleTonMap == null)
+            singleTonMap = new MapDatabase();
+        return singleTonMap;
     }
 
     public void addNode(int iD, String ipAdress){

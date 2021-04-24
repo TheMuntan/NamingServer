@@ -10,7 +10,7 @@ public class HashFunction {
     public static int getHash(String message){
         // message.hashCode() will return a hash value in range [-2^31, 2^31-1]
         // + 2^31 => [0, 2^31-1+2^31]
-        // % 327680 => [0, 327680]
-        return (int)((message.hashCode() + Math.pow(2, 31))%327680);
+        // * (327680/(max+abs(min))) => [0, 327680]
+        return (message.hashCode() + Integer.MAX_VALUE)*(327680/(Integer.MAX_VALUE+Math.abs(Integer.MIN_VALUE)));
     }
 }

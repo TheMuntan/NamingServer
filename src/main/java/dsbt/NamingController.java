@@ -1,50 +1,48 @@
 package dsbt;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class NamingController {
 
 
-	private MapDatabase map = MapDatabase.getInstanceMap();
+	private final MapDatabase map = MapDatabase.getInstanceMap();
 
 
-	@PutMapping("/addNode")
-	public String addNode(@RequestParam (value = "integer",defaultValue = "-1") int iD, @RequestParam(value = "ip", defaultValue = "null") String ipAdress ){
-		if(!(iD ==-1) && (!ipAdress.equals("null"))) {
-			map.addNode(iD,ipAdress);
+	@GetMapping("/addNode")
+	public String addNode(@RequestParam (value = "hostName",defaultValue = "null") String hostName, HttpServletRequest request){
+		if(!(hostName.equals("null"))) {
+			map.addNode(HashFunction.getHash(hostName),request.getRemoteAddr());
 			return ("Node has been added!");
 		}
 		else
-			return ("The variables are not good! ");
+			return ("Please provide a hostname");
 	}
 
 	@PutMapping("/removeNode")
-	public String removeNode(@RequestParam (value = "integer",defaultValue = "-1") int iD){
-		if (!(iD ==-1)){
-			map.removeNode(iD);
+	public String removeNode(@RequestParam (value = "hostname",defaultValue = "null") String hostname){
+		if (!(hostname.equals("null"))){
+			map.removeNode(HashFunction.getHash(hostname));
 			return ("Node had been removed");
 		}
 		else
-			return ("The variable is not goed");
+			return ("Please provide a host name");
 
 	}
 
 	@GetMapping("/getFile")
-	public File getFile(@RequestParam(value = "filename", defaultValue = "null") String fileName){
+	public String getFile(@RequestParam(value = "filename", defaultValue = "null") String fileName){
 		if (!fileName.equals("null")){
-			// file -> hashfunctie, de hashfunctie vergelijken met de ID's , file eruithalen en terug geven
-			return null;
+			int serverID = -1;
+			// file -> hashfunctie, de hashfunctie vergelijken met de ID's , ip van server returnen
+			return map.getIp(serverID);
 		}
 		else
 			return null;
-
 	}
 }

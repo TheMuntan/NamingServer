@@ -19,7 +19,7 @@ public class MapDatabase {
         this.map = new HashMap<>();
     }
 
-    public static  MapDatabase getInstanceMap(){
+    public static MapDatabase getInstanceMap(){
         if (singletonMap == null)
             singletonMap = new MapDatabase();
         return singletonMap;

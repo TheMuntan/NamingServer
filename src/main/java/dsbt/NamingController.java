@@ -1,11 +1,12 @@
 package dsbt;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import dsbt.Exceptions.MissingHostname;
+import dsbt.ResponseBody.ReturnMessage;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RestController
 public class NamingController {
@@ -14,17 +15,26 @@ public class NamingController {
 	private final MapDatabase map = MapDatabase.getInstanceMap();
 
 
-	@GetMapping("/addNode")
-	public String addNode(@RequestParam (value = "hostName",defaultValue = "null") String hostName, HttpServletRequest request){
+	@PutMapping("/addNode")
+	public ReturnMessage addNode(@RequestParam (value = "hostName",defaultValue = "null") String hostName, HttpServletRequest request) throws MissingHostname {
+		// Logging
+		SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+		Date date = new Date(System.currentTimeMillis());
+		System.out.println("[" + formatter.format(date) + "] Request to add node {Name: "+hostName+" Ip: " + request.getRemoteAddr() + "} [  ]");
+
 		if(!(hostName.equals("null"))) {
 			map.addNode(HashFunction.getHash(hostName),request.getRemoteAddr());
-			return ("Node has been added!");
+			// Logging
+			date.setTime(System.currentTimeMillis());
+			System.out.print("\r[" + formatter.format(date) + "] Request to add node {Name: "+hostName+" Ip: " + request.getRemoteAddr() + "} [OK]\n");
+
+			return new ReturnMessage("Node has been added!");
 		}
 		else
-			return ("Please provide a hostname");
+			throw  new MissingHostname();
 	}
 
-	@PutMapping("/removeNode")
+	@DeleteMapping("/removeNode")
 	public String removeNode(@RequestParam (value = "hostname",defaultValue = "null") String hostname){
 		if (!(hostname.equals("null"))){
 			map.removeNode(HashFunction.getHash(hostname));

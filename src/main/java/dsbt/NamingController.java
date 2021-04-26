@@ -1,5 +1,6 @@
 package dsbt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import dsbt.Exceptions.MissingHostname;
 import dsbt.ResponseBody.ReturnMessage;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class NamingController {
 
 
 	@PutMapping("/addNode")
-	public ReturnMessage addNode(@RequestParam (value = "hostName",defaultValue = "null") String hostName, HttpServletRequest request) throws MissingHostname {
+	public ReturnMessage addNode(@RequestParam (value = "hostName",defaultValue = "null") String hostName, HttpServletRequest request) throws MissingHostname, JsonProcessingException {
 		// Logging
 		SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
 		Date date = new Date(System.currentTimeMillis());
@@ -27,7 +28,7 @@ public class NamingController {
 			// Logging
 			date.setTime(System.currentTimeMillis());
 			System.out.print("\r[" + formatter.format(date) + "] Request to add node {Name: "+hostName+" Ip: " + request.getRemoteAddr() + "} [OK]\n");
-
+			map.saveToFile();
 			return new ReturnMessage("Node has been added!");
 		}
 		else
@@ -46,7 +47,7 @@ public class NamingController {
 	}
 
 	@GetMapping("/getFile")
-	public String getFile(@RequestParam(value = "filename", defaultValue = "null") String fileName){
+	public String getFile(@RequestParam (value = "filename", defaultValue = "null") String fileName){
 		if (!fileName.equals("null")){
 
 

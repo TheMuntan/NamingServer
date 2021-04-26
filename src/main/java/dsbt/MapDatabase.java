@@ -48,13 +48,15 @@ public class MapDatabase {
         String localDir = System.getProperty("user.dir");
 
         try {
-            File file = new File("..\\..\\Resources/jsondatabase.json");
+            File file = new File("jsondatabase.json");
             if(file.createNewFile()) {
-                FileWriter writer = new FileWriter("..\\..\\Resources/jsondatabase.json");
+                FileWriter writer = new FileWriter("jsondatabase.json");
                 writer.write(json);
                 writer.close();
+                System.out.println("File Saved");
             }
         } catch(IOException ioe) {
+            System.out.println("Saving failed");
             ioe.printStackTrace();
         }
     }

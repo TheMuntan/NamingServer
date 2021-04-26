@@ -8,4 +8,8 @@ git clone https://github.com/TheMuntan/NamingServer
 
 sudo apt install default-jre         
 
+sudo apt install curl
+
+curl -X PUT http://host2.6DIST-group12-shared-network:5001/addNode?hostName=test
+
 java NamingServer/src/main/java/dsbt/NamingServer.java

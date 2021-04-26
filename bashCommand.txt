@@ -1,3 +1,5 @@
+ssh pi@143.129.39.106 -p 30125
+
 sudo apt update
 sudo apt upgrade
 

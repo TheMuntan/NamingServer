@@ -1,6 +1,15 @@
 package dsbt;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import java.io.FileWriter;
+import java.io.File;
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MapDatabase {
 
@@ -9,10 +18,10 @@ public class MapDatabase {
 
 
     private MapDatabase() {
-        map = new HashMap<>();
+        this.map = new HashMap<>();
     }
 
-    public static  MapDatabase getInstanceMap(){
+    public static MapDatabase getInstanceMap(){
         if (singletonMap == null)
             singletonMap = new MapDatabase();
         return singletonMap;
@@ -30,8 +39,32 @@ public class MapDatabase {
         return map.get(iD);
     }
 
-    public void saveToFile(){
-
+    public String saveToJsonString() throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(map);
     }
+
+    public void saveToFile() throws JsonProcessingException {
+        String json = saveToJsonString();
+        String localDir = System.getProperty("user.dir");
+
+        try {
+            File file = new File("..\\..\\Resources/jsondatabase.json");
+            if(file.createNewFile()) {
+                FileWriter writer = new FileWriter("..\\..\\Resources/jsondatabase.json");
+                writer.write(json);
+                writer.close();
+            }
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
+
+    public Set<Map.Entry<Integer, String>> entrySet(){
+        return map.entrySet();
+    }
+
+
+
 
 }

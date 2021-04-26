@@ -1,6 +1,8 @@
 package dsbt;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import java.io.FileWriter;
 import java.io.File;
@@ -56,5 +58,13 @@ public class MapDatabase {
             ioe.printStackTrace();
         }
     }
+
+
+    public Set<Map.Entry<Integer, String>> entrySet(){
+        return map.entrySet();
+    }
+
+
+
 
 }

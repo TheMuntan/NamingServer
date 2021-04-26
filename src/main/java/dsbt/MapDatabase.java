@@ -9,7 +9,7 @@ public class MapDatabase {
 
 
     private MapDatabase() {
-        HashMap<Integer,String> map = new HashMap<>();
+        map = new HashMap<>();
     }
 
     public static  MapDatabase getInstanceMap(){

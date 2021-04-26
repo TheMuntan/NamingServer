@@ -36,7 +36,7 @@ public class NamingController {
 	}
 
 	@GetMapping("/getFile")
-	public String getFile(@RequestParam(value = "filename", defaultValue = "null") String fileName){
+	public String getFile(@RequestParam (value = "filename", defaultValue = "null") String fileName){
 		if (!fileName.equals("null")){
 			int serverID = -1;
 			// file -> hashfunctie, de hashfunctie vergelijken met de ID's , ip van server returnen

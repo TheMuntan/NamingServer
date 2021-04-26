@@ -49,6 +49,7 @@ public class MapDatabase {
 
         try {
             File file = new File("jsondatabase.json");
+            System.out.println("test");
             if(file.createNewFile()) {
                 FileWriter writer = new FileWriter("jsondatabase.json");
                 writer.write(json);

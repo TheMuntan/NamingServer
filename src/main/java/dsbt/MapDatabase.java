@@ -56,6 +56,7 @@ public class MapDatabase {
                 System.out.println("File Saved");
             }
         } catch(IOException ioe) {
+            System.out.println("Saving failed");
             ioe.printStackTrace();
         }
     }

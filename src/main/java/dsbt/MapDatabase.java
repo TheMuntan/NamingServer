@@ -2,6 +2,13 @@ package dsbt;
 
 import java.util.HashMap;
 
+import java.io.FileWriter;
+import java.io.File;
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class MapDatabase {
 
     private static MapDatabase singletonMap = null;
@@ -9,7 +16,7 @@ public class MapDatabase {
 
 
     private MapDatabase() {
-        HashMap<Integer,String> map = new HashMap<>();
+        this.map = new HashMap<>();
     }
 
     public static  MapDatabase getInstanceMap(){
@@ -30,8 +37,24 @@ public class MapDatabase {
         return map.get(iD);
     }
 
-    public void saveToFile(){
+    public String saveToJsonString() throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(map);
+    }
 
+    public void saveToFile() throws JsonProcessingException {
+        String json = saveToJsonString();
+        String localDir = System.getProperty("user.dir");
+
+        try {
+            File file = new File("..\\..\\Resources/jsondatabase.json");
+            if(file.createNewFile()) {
+                FileWriter writer = new FileWriter("..\\..\\Resources/jsondatabase.json");
+                writer.write(json);
+                writer.close();
+            }
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 
 }

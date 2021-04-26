@@ -54,7 +54,7 @@ public class NamingController {
 			ArrayList<Integer> possibleNodes = new ArrayList<>();
 			ArrayList<Integer> lowerNodes = new ArrayList<>();
 			ArrayList<Integer> higherNodes = new ArrayList<>();
-			int smallestDifference = -100;
+			int smallestDifference = -999999999;
 
 
 

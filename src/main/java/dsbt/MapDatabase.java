@@ -53,6 +53,7 @@ public class MapDatabase {
                 FileWriter writer = new FileWriter("..\\..\\Resources/jsondatabase.json");
                 writer.write(json);
                 writer.close();
+                System.out.println("File Saved");
             }
         } catch(IOException ioe) {
             ioe.printStackTrace();

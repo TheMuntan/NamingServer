@@ -1,7 +1,5 @@
 package dsbt;
 
-import static org.junit.Assert.assertTrue;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,6 +20,6 @@ public class MapDatabaseTest
         map.addNode(7, "143.129.39.106:30127");
         map.addNode(21, "143.129.39.106:30128");
 
-        Assert.assertEquals("{\"1\":\"143.129.39.106:30126\",\"7\":\"143.129.39.106:30127\",\"21\":\"143.129.39.106:30128\"}", map.saveToJsonString());
+        Assert.assertEquals("{\"1\":\"143.129.39.106:30126\",\"21\":\"143.129.39.106:30128\",\"7\":\"143.129.39.106:30127\"}", map.saveToJsonString());
     }
 }

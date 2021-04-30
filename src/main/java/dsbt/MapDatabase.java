@@ -45,17 +45,14 @@ public class MapDatabase {
 
     public void saveToFile() throws JsonProcessingException {
         String json = saveToJsonString();
-        String localDir = System.getProperty("user.dir");
 
         try {
             File file = new File("jsondatabase.json");
-            System.out.println("test");
-            if(file.createNewFile()) {
-                FileWriter writer = new FileWriter("jsondatabase.json");
-                writer.write(json);
-                writer.close();
-                System.out.println("File Saved");
-            }
+            file.createNewFile(); //only == 1 if file didn't exist
+            FileWriter writer = new FileWriter("jsondatabase.json");
+            writer.write(json);
+            writer.close();
+            System.out.println("Database saved");
         } catch(IOException ioe) {
             System.out.println("Saving failed");
             ioe.printStackTrace();

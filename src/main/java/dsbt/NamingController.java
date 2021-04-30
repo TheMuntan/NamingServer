@@ -36,9 +36,15 @@ public class NamingController {
 	}
 
 	@DeleteMapping("/removeNode")
-	public ReturnMessage removeNode(@RequestParam (value = "hostname",defaultValue = "null") String hostname) throws MissingHostname{
-		if (!(hostname.equals("null"))){
-			map.removeNode(HashFunction.getHash(hostname));
+	public ReturnMessage removeNode(@RequestParam (value = "hostname",defaultValue = "null") String hostName) throws MissingHostname, JsonProcessingException {
+		// Logging
+		SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+		Date date = new Date(System.currentTimeMillis());
+		System.out.println("[" + formatter.format(date) + "] Request to remove node {Name: "+hostName+"} [  ]");
+		if (!(hostName.equals("null"))){
+			System.out.println("\r[" + formatter.format(date) + "] Request to remove node {Name: "+hostName+"} [OK]");
+			map.removeNode(HashFunction.getHash(hostName));
+			map.saveToFile();
 			return new ReturnMessage("Node had been removed");
 		}
 		else
@@ -63,20 +69,16 @@ public class NamingController {
 				possibleNodes.add(temp);
 			}
 
-			Iterator<Integer> iter = possibleNodes.iterator();
-
 			// de waarde van iter.next moet in een variabele gestoken worden als deze meerdere keren gebruikt moet worden
 			// anders zal iter.next elke keer de volgende waarde pakken telkens als deze aangeroepen wordt
-			while (iter.hasNext()){
-				int nodeHash = iter.next();
-				if (nodeHash< hashedFile){
+			for (int nodeHash : possibleNodes) {
+				if (nodeHash < hashedFile) {
 					lowerNodes.add(nodeHash);
 					int temp = hashedFile - nodeHash;
-					if (temp < smallestDifference){
+					if (temp < smallestDifference) {
 						smallestDifference = temp;
 					}
-				}
-				else
+				} else
 					higherNodes.add(nodeHash);
 			}
 
@@ -88,37 +90,6 @@ public class NamingController {
 				// Hier moet ook collections max gebruikt worden om de juiste waarde uit de map te kunnen halen
 				return map.getIp(Collections.max(lowerNodes));
 			}
-
-/*
-			Set<Integer> set = map.returnKeySet();
-			Iterator<Integer> it = set.iterator();
-			while(it.hasNext()){
-
-				possibleNodes.add(it);
-			}
-
-
-
-
-
-			for (int i=hashedFile; i>0;i--){
-				if (map.containsID(i)){
-					closestUnder = map.getIp(i);
-					break;
-				}
-			}
-
-			if (closestUnder==null){
-
-				Set<Integer> set = map.returnSet();
-				Iterator<Integer> i =set.iterator();
-				while(i.hasNext()){
-
-				}
-			}
-*/
-			// file -> hashfunctie, de hashfunctie vergelijken met de ID's , ip van server returnen
-
 
 		}
 		else

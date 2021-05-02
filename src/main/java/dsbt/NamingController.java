@@ -23,16 +23,44 @@ public class NamingController {
 		Date date = new Date(System.currentTimeMillis());
 		System.out.println("[" + formatter.format(date) + "] Request to add node {Name: "+hostName+" Ip: " + request.getRemoteAddr() + "} [  ]");
 
+		ArrayList<Integer> existingNodes = new ArrayList<>();
+		boolean succesfulAdd = true;
+
 		if(!(hostName.equals("null"))) {
-			map.addNode(HashFunction.getHash(hostName),request.getRemoteAddr());
-			// Logging
-			date.setTime(System.currentTimeMillis());
-			System.out.print("\r[" + formatter.format(date) + "] Request to add node {Name: "+hostName+" Ip: " + request.getRemoteAddr() + "} [OK]\n");
-			map.saveToFile();
-			return new ReturnMessage("Node has been added!");
+
+			for (Map.Entry<Integer, String> entry : map.entrySet()) {
+				int temp = entry.getKey();
+				existingNodes.add(temp);
+			}
+
+			int toAddInt = HashFunction.getHash(hostName);
+
+			for (int nodeHash : existingNodes) {
+				if (nodeHash == toAddInt){
+					succesfulAdd = false;
+					break;
+				}
+			}
+
+			if (succesfulAdd){
+				map.addNode(toAddInt,request.getRemoteAddr());
+				date.setTime(System.currentTimeMillis());
+				System.out.print("\r[" + formatter.format(date) + "] Request to add node {Name: "+hostName+" Ip: " + request.getRemoteAddr() + "} [OK]\n");
+				map.saveToFile();
+				return new ReturnMessage("Node has been added!");
+
+			}
+			else{
+				date.setTime(System.currentTimeMillis());
+				System.out.print("\r[" + formatter.format(date) + "] Request to add node {Name: "+hostName+" Ip: " + request.getRemoteAddr() + "} [FAILED]\n");
+				return new ReturnMessage("This node already exists! Please change the name of the node!");
+			}
 		}
-		else
+		else{
+			date.setTime(System.currentTimeMillis());
+			System.out.print("\r[" + formatter.format(date) + "] Request to add node {Name: "+hostName+" Ip: " + request.getRemoteAddr() + "} [FAILED]\n");
 			throw new MissingHostname();
+		}
 	}
 
 	@DeleteMapping("/removeNode")
@@ -41,20 +69,52 @@ public class NamingController {
 		SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
 		Date date = new Date(System.currentTimeMillis());
 		System.out.println("[" + formatter.format(date) + "] Request to remove node {Name: "+hostName+"} [  ]");
+
 		if (!(hostName.equals("null"))){
-			System.out.println("\r[" + formatter.format(date) + "] Request to remove node {Name: "+hostName+"} [OK]");
-			map.removeNode(HashFunction.getHash(hostName));
-			map.saveToFile();
-			return new ReturnMessage("Node had been removed");
+
+			ArrayList<Integer> possibleNodes = new ArrayList<>();
+			boolean succesfulRemoved = false;
+
+			for (Map.Entry<Integer, String> entry : map.entrySet()) {
+				int temp = entry.getKey();
+				possibleNodes.add(temp);
+			}
+
+			int toRemoveInt = HashFunction.getHash(hostName);
+
+			for (int nodeHash : possibleNodes) {
+				if (nodeHash == toRemoveInt){
+					succesfulRemoved = true;
+					map.removeNode(toRemoveInt);
+					map.saveToFile();
+					date.setTime(System.currentTimeMillis());
+					System.out.println("\r[" + formatter.format(date) + "] Request to remove node {Name: "+hostName+"} [OK]");
+				}
+			}
+
+
+			if (succesfulRemoved)
+				return new ReturnMessage("Node had been removed");
+			else{
+				date.setTime(System.currentTimeMillis());
+				System.out.println("\r[" + formatter.format(date) + "] Request to remove node {Name: "+hostName+"} [FAILED]");
+				return new ReturnMessage("This node is not in the database");
+			}
 		}
-		else
+		else{
+			date.setTime(System.currentTimeMillis());
+			System.out.println("\r[" + formatter.format(date) + "] Request to remove node {Name: "+hostName+"} [FAILED]");
 			throw new MissingHostname();
+		}
 	}
 
 	@GetMapping("/getFile")
 	public String getFile(@RequestParam (value = "filename", defaultValue = "null") String fileName){
-		if (!fileName.equals("null")){
+		SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+		Date date = new Date(System.currentTimeMillis());
+		System.out.println("[" + formatter.format(date) + "] Request to get file  {FileName: "+fileName+"}");
 
+		if (!fileName.equals("null")){
 			int hashedFile = HashFunction.getHash(fileName);
 			ArrayList<Integer> possibleNodes = new ArrayList<>();
 			ArrayList<Integer> lowerNodes = new ArrayList<>();
@@ -62,7 +122,6 @@ public class NamingController {
 			// smallestDifference moet een grote waarde hebben, in dit systeem zal er nooit een kleiner
 			// verschil mogelijk zijn dan -999999999
 			int smallestDifference = Integer.MAX_VALUE;
-
 
 			for (Map.Entry<Integer,String> entry : map.entrySet()){
 				int temp = entry.getKey();

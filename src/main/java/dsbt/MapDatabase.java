@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class MapDatabase {
 
     private static MapDatabase singletonMap = null;
-    private HashMap<Integer,String> map;
+    private final HashMap<Integer,String> map;
 
 
     private MapDatabase() {
@@ -48,7 +48,9 @@ public class MapDatabase {
 
         try {
             File file = new File("jsondatabase.json");
-            file.createNewFile(); //only == 1 if file didn't exist
+            if (file.createNewFile()){
+                System.out.println("Database file created");
+            } //only == 1 if file didn't exist
             FileWriter writer = new FileWriter("jsondatabase.json");
             writer.write(json);
             writer.close();
@@ -59,6 +61,9 @@ public class MapDatabase {
         }
     }
 
+    public boolean contains(int iD){
+        return map.containsKey(iD);
+    }
 
     public Set<Map.Entry<Integer, String>> entrySet(){
         return map.entrySet();
